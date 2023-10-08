@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-maim69n%_8#o5qp0h@d5+#^9u3+lp*qbej7z=-c(i$m=#qh62p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.ngrok-free.app']
+ALLOWED_HOSTS = [
+    'localhost',
+    '.ngrok-free.app',
+]
 
 
 # Application definition
@@ -130,4 +133,5 @@ TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 
 TELEGRAM_HANDLERS = (
     'start',
+    'echo',
 )
