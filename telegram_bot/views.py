@@ -1,20 +1,19 @@
 from telegram import Update
-from telegram.ext import Updater, CommandHandler, CallbackContext
+from telegram.ext import Updater
 from django.conf import settings
 from django.http import JsonResponse
+from django.utils.module_loading import import_string
 from django.views.decorators.csrf import csrf_exempt
 import json
 
 
-def start(update: Update, context: CallbackContext) -> None:
-    context.bot.send_message(chat_id=update.effective_chat.id, text="yeah")
-
 updater = Updater(token=settings.TELEGRAM_BOT_TOKEN, use_context=True)
-
 dispatcher = updater.dispatcher
 
-start_handler = CommandHandler('start', start)
-dispatcher.add_handler(start_handler)
+for name in settings.TELEGRAM_HANDLERS:
+    handler = import_string(f'telegram_bot.handlers.{name}.get_handler')()
+    dispatcher.add_handler(handler)
+
 
 @csrf_exempt
 def webhook(request):
