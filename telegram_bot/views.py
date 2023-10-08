@@ -1,11 +1,11 @@
-from telegram import Update
-from telegram.ext import Updater
+import json
+
 from django.conf import settings
 from django.http import JsonResponse
 from django.utils.module_loading import import_string
 from django.views.decorators.csrf import csrf_exempt
-import json
-
+from telegram import Update
+from telegram.ext import Updater
 
 updater = Updater(token=settings.TELEGRAM_BOT_TOKEN, use_context=True)
 dispatcher = updater.dispatcher
@@ -22,4 +22,4 @@ def webhook(request):
         update = Update.de_json(json.loads(json_string), updater.bot)
         dispatcher.process_update(update)
 
-    return JsonResponse({'status':'ok'})
+    return JsonResponse({'status': 'ok'})
