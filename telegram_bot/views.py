@@ -16,7 +16,7 @@ for name in settings.TELEGRAM_HANDLERS:
 
 
 @csrf_exempt
-def webhook(request):
+def webhook(request) -> JsonResponse:
     if request.method == "POST":
         json_string = request.body.decode('UTF-8')
         update = Update.de_json(json.loads(json_string), updater.bot)

@@ -1,8 +1,8 @@
 from telegram import ParseMode, Update
-from telegram.ext import CallbackContext, MessageHandler
+from telegram.ext import CallbackContext, Handler, MessageHandler
 
 
-def get_handler():
+def get_handler() -> Handler:
     def handler(update: Update, context: CallbackContext) -> None:
         context.bot.send_message(
             chat_id=update.effective_chat.id,

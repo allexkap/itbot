@@ -1,16 +1,16 @@
 from telegram import Update
-from telegram.ext import CallbackContext, CommandHandler
+from telegram.ext import CallbackContext, CommandHandler, Handler
 
 from telegram_bot.models import User
 
 
-def get_handler():
+def get_handler() -> Handler:
     def handler(update: Update, context: CallbackContext) -> None:
-        id = update.effective_user.id
+        user_id = update.effective_user.id
         try:
-            user = User.objects.get(telegram_id=id)
+            user = User.objects.get(telegram_id=user_id)
         except User.DoesNotExist:
-            user = User(telegram_id=id)
+            user = User(telegram_id=user_id)
             user.save()
 
         context.bot.send_message(
