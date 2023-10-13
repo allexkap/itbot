@@ -2,17 +2,16 @@ import json
 
 from django.conf import settings
 from django.http import JsonResponse
-from django.utils.module_loading import import_string
 from django.views.decorators.csrf import csrf_exempt
 from telegram import Update
-from telegram.ext import Updater
+from telegram.ext import MessageHandler, Updater
+
+from telegram_bot.workflow.handler import workflow_handler
 
 updater = Updater(token=settings.TELEGRAM_BOT_TOKEN, use_context=True)
 dispatcher = updater.dispatcher
 
-for name in settings.TELEGRAM_HANDLERS:
-    handler = import_string(f'telegram_bot.handlers.{name}.get_handler')()
-    dispatcher.add_handler(handler)
+dispatcher.add_handler(MessageHandler(None, workflow_handler))
 
 
 @csrf_exempt
