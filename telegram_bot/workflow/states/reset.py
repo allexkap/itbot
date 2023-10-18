@@ -1,5 +1,9 @@
 from .utils import *
 
+WAYS = {
+    'start': 'start',
+}
+
 
 def prepare(update: Update, context: CallbackContext) -> None | str:
     context.bot.send_message(
@@ -8,7 +12,6 @@ def prepare(update: Update, context: CallbackContext) -> None | str:
     )
 
 
+@parse_commands(WAYS)
 def process(update: Update, context: CallbackContext) -> None | str:
-    cmd, _ = parse_cmd(update.effective_message.text)
-    if cmd == 'start':
-        return 'start'
+    pass
