@@ -1,17 +1,16 @@
-from telegram import ReplyKeyboardRemove
-
 from .utils import *
 
 edges = [
-    Edge('start', 'start', ''),
+    Edge('test_echo', 'echo', 'Повторить сообщение'),
+    Edge('disabled', 'stop', 'Выйти из аккаунта'),
 ]
 
 
 def prepare(update: Update, context: CallbackContext) -> None | str:
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text="Хорошо, я тебя забыл :_(",
-        reply_markup=ReplyKeyboardRemove(),
+        text="Что делаем?",
+        reply_markup=get_markup(edges),
     )
 
 

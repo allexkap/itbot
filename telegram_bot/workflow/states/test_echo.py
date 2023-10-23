@@ -1,19 +1,25 @@
+from telegram import ParseMode
+
 from .utils import *
 
 edges = [
-    Edge('echo', 'echo', 'Повторить сообщение'),
-    Edge('reset', 'stop', 'Выйти из аккаунта'),
+    Edge('ready', 'cancel'),
 ]
 
 
 def prepare(update: Update, context: CallbackContext) -> None | str:
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text="Что делаем?",
+        text="Напиши любое сообщение",
         reply_markup=get_markup(edges),
     )
 
 
 @parse_commands(edges)
 def process(update: Update, context: CallbackContext) -> None | str:
-    pass
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=update.message.text_html,
+        parse_mode=ParseMode.HTML,
+    )
+    return 'ready'

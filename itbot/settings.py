@@ -131,8 +131,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 import os
 
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-
-TELEGRAM_HANDLERS = (
-    'start',
-    'echo',
-)
