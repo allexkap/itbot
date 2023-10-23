@@ -1,15 +1,17 @@
+from telegram import ReplyKeyboardRemove
+
 from .utils import *
 
-edges = {
-    'start': 'start',
-}
+edges = [
+    Edge('start', 'start', ''),
+]
 
 
 def prepare(update: Update, context: CallbackContext) -> None | str:
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text="$reset_message",
-        reply_markup=get_markup(edges),
+        text="Хорошо, я тебя забыл :_(",
+        reply_markup=ReplyKeyboardRemove(),
     )
 
 
