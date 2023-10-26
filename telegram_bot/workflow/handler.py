@@ -20,6 +20,9 @@ def workflow_handler(update: Update, context: CallbackContext) -> None:
     except KeyError:
         next_state = 'ready'
 
+    if not next_state:
+        return
+
     result = states[next_state].prepare(update, context)
     if result:
         return

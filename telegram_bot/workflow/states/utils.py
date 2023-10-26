@@ -28,7 +28,8 @@ def parse_commands(edges: list[Edge]) -> callable:
         def func(update: Update, context: CallbackContext) -> None | str:
             try:
                 pos = edges.index(update.effective_message.text)
-                return edges[pos].next_state
+                obj = edges[pos].next_state
+                return obj(update, context) if callable(obj) else obj
             except ValueError:
                 pass
             try:

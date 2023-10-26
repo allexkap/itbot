@@ -4,6 +4,7 @@ workflow_states = (
     'disabled',
     'ready',
     'test_echo',
+    'test_magic',
 )
 
 

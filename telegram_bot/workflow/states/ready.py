@@ -2,6 +2,7 @@ from .utils import *
 
 edges = [
     Edge('test_echo', 'echo', 'Повторить сообщение'),
+    Edge('test_magic', 'magic', 'Сделать красиво'),
     Edge('disabled', 'stop', 'Выйти из аккаунта'),
 ]
 

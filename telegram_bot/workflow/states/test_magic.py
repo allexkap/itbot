@@ -1,19 +1,11 @@
+import re
+
 from telegram import ParseMode
 
 from .utils import *
 
-
-def _help(update: Update, context: CallbackContext) -> None:
-    context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text="`//cancel` to suppress command",
-        parse_mode=ParseMode.MARKDOWN_V2,
-    )
-
-
 edges = [
     Edge('ready', 'cancel'),
-    Edge(_help, 'help'),
 ]
 
 
@@ -27,12 +19,13 @@ def prepare(update: Update, context: CallbackContext) -> None | str:
 
 @parse_commands(edges)
 def process(update: Update, context: CallbackContext) -> None | str:
-    raw = update.message.text_html
-    if raw.startswith('//'):
-        raw = raw[1:]
+    text = update.message.text
+    text = re.sub('\.', '', text)
+    text = re.sub(' ', 'ㅤ', text)
+    text = re.sub('[^ㅤ\n]', '<span class="tg-spoiler">ㅤ</span>', text)
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text=raw,
+        text=text,
         parse_mode=ParseMode.HTML,
     )
     return 'ready'
