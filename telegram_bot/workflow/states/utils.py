@@ -6,7 +6,7 @@ from telegram.ext import CallbackContext
 
 @dataclass
 class Edge:
-    next_state: str
+    next_state: str | callable
     cmd: str
     text: str = ''
 
