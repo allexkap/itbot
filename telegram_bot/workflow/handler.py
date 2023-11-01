@@ -16,14 +16,14 @@ def workflow_handler(update: Update, context: CallbackContext) -> None:
         user.save()
 
     try:
-        next_state = states[user.workflow_state].process(update, context)
+        next_state = states[user.workflow_state].process(update, context, user)
     except KeyError:
         next_state = 'ready'
 
     if not next_state:
         return
 
-    result = states[next_state].prepare(update, context)
+    result = states[next_state].prepare(update, context, user)
     if result:
         return
 

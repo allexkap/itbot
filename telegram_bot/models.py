@@ -14,9 +14,12 @@ class User(models.Model):
 
     def get_property(self, name) -> str | None:
         try:
-            return self.context_set.get(name=name)
+            return self.context_set.get(name=name).value
         except models.Context.DoesNotExist:
             return None
+
+    def clear_properties(self) -> None:
+        self.context_set.all().delete()
 
 
 class Context(models.Model):

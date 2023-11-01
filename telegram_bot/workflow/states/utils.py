@@ -3,10 +3,12 @@ from dataclasses import dataclass
 from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import CallbackContext
 
+from telegram_bot.models import User
+
 
 @dataclass
 class Edge:
-    next_state: str | callable
+    next_state: str
     cmd: str
     text: str = ''
 
@@ -25,15 +27,15 @@ def parse_cmd(msg: str) -> tuple[str]:
 
 def parse_commands(edges: list[Edge]) -> callable:
     def inner(fun: callable) -> callable:
-        def func(update: Update, context: CallbackContext) -> None | str:
+        def func(update: Update, context: CallbackContext, user: User) -> None | str:
             try:
                 pos = edges.index(update.effective_message.text)
                 obj = edges[pos].next_state
-                return obj(update, context) if callable(obj) else obj
+                return obj(update, context, user) if callable(obj) else obj
             except ValueError:
                 pass
             try:
-                return fun(update, context)
+                return fun(update, context, user)
             except Exception as ex:
                 print(ex)  # todo logging
                 return None

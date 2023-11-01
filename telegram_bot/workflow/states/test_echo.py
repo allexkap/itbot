@@ -3,7 +3,7 @@ from telegram import ParseMode
 from .utils import *
 
 
-def _help(update: Update, context: CallbackContext) -> None:
+def _help(update: Update, context: CallbackContext, user: User) -> None:
     context.bot.send_message(
         chat_id=update.effective_chat.id,
         text="`//cancel` to suppress command",
@@ -17,7 +17,7 @@ edges = [
 ]
 
 
-def prepare(update: Update, context: CallbackContext) -> None | str:
+def prepare(update: Update, context: CallbackContext, user: User) -> None | str:
     context.bot.send_message(
         chat_id=update.effective_chat.id,
         text="Напиши любое сообщение",
@@ -26,7 +26,7 @@ def prepare(update: Update, context: CallbackContext) -> None | str:
 
 
 @parse_commands(edges)
-def process(update: Update, context: CallbackContext) -> None | str:
+def process(update: Update, context: CallbackContext, user: User) -> None | str:
     raw = update.message.text_html
     if raw.startswith('//'):
         raw = raw[1:]
