@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from dataclasses import dataclass
 
 from telegram import ReplyKeyboardMarkup, Update
@@ -5,10 +6,12 @@ from telegram.ext import CallbackContext
 
 from telegram_bot.models import User
 
+WorkflowFunction = Callable[[Update, CallbackContext, User], None | str]
+
 
 @dataclass
 class Edge:
-    next_state: str
+    next_state: str | WorkflowFunction
     cmd: str
     text: str = ''
 
@@ -25,8 +28,8 @@ def parse_cmd(msg: str) -> tuple[str]:
     return msg[1:].partition(' ')[::2] if msg.startswith('/') else ('', msg)
 
 
-def parse_commands(edges: list[Edge]) -> callable:
-    def inner(fun: callable) -> callable:
+def parse_commands(edges: list[Edge]) -> Callable[[WorkflowFunction], WorkflowFunction]:
+    def inner(fun: WorkflowFunction) -> WorkflowFunction:
         def func(update: Update, context: CallbackContext, user: User) -> None | str:
             try:
                 pos = edges.index(update.effective_message.text)
