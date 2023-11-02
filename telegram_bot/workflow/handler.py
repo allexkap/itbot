@@ -12,20 +12,22 @@ def workflow_handler(update: Update, context: CallbackContext) -> None:
         user = User.objects.get(telegram_id=user_id)
     except User.DoesNotExist:
         user = User(telegram_id=user_id)
-        user.workflow_state = 'reset'
-        user.save()
+        user.set_workflow_state('reset')
 
     try:
         next_state = states[user.workflow_state].process(update, context, user)
-    except KeyError:
-        next_state = 'ready'
+        if next_state:
+            if states[next_state].prepare(update, context, user):
+                next_state = None
 
-    if not next_state:
-        return
+    except:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id, text='Sorry, error has occurred'
+        )
+        states[next_state:='ready'].prepare(update, context, user)
+        raise
 
-    result = states[next_state].prepare(update, context, user)
-    if result:
-        return
-
-    user.workflow_state = next_state
-    user.save()
+    finally:
+        if not next_state:
+            return
+        user.set_workflow_state(next_state)

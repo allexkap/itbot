@@ -9,10 +9,14 @@ class User(models.Model):
     def is_authenticated(self) -> bool:
         return self.isu_id is not None
 
-    def set_property(self, name, value) -> None:
+    def set_workflow_state(self, state: str) -> None:
+        self.workflow_state = state
+        self.save()
+
+    def set_property(self, name: str, value: str) -> None:
         self.context_set.update_or_create(name=name, value=value)
 
-    def get_property(self, name) -> str | None:
+    def get_property(self, name: str) -> str | None:
         try:
             return self.context_set.get(name=name).value
         except models.Context.DoesNotExist:
