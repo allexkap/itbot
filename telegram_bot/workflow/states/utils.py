@@ -1,12 +1,12 @@
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from telegram import ReplyKeyboardMarkup, Update
+from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 from telegram.ext import CallbackContext
 
 from telegram_bot.models import User
 
-WorkflowFunction = Callable[[Update, CallbackContext, User], None | str]
+WorkflowFunction = Callable[[Update, CallbackContext, User], str | None]
 
 
 @dataclass
@@ -29,8 +29,8 @@ def parse_cmd(msg: str) -> tuple[str]:
 
 
 def parse_commands(edges: list[Edge]) -> Callable[[WorkflowFunction], WorkflowFunction]:
-    def inner(fun: WorkflowFunction) -> WorkflowFunction:
-        def func(update: Update, context: CallbackContext, user: User) -> None | str:
+    def decorator(fun: WorkflowFunction) -> WorkflowFunction:
+        def func(update: Update, context: CallbackContext, user: User) -> str | None:
             try:
                 pos = edges.index(update.effective_message.text)
                 obj = edges[pos].next_state
@@ -45,10 +45,14 @@ def parse_commands(edges: list[Edge]) -> Callable[[WorkflowFunction], WorkflowFu
 
         return func
 
-    return inner
+    return decorator
 
 
-def get_markup(edges: list[Edge] = [], params: dict = {}) -> ReplyKeyboardMarkup:
+def get_reply_markup(
+    edges: list[Edge] | None = None, params: dict = {}
+) -> ReplyKeyboardMarkup | ReplyKeyboardRemove:
+    if edges is None:
+        return ReplyKeyboardRemove()
     kwargs = {
         'resize_keyboard': True,
         'one_time_keyboard': False,
@@ -57,3 +61,14 @@ def get_markup(edges: list[Edge] = [], params: dict = {}) -> ReplyKeyboardMarkup
     kwargs.update(params)
     keyboard = ((edge.text,) if edge.text else ('/' + edge.cmd,) for edge in edges)
     return ReplyKeyboardMarkup(keyboard, **kwargs)
+
+
+def send_message_with_reply_keyboard(text: str, *args, **kwargs):
+    def func(update: Update, context: CallbackContext, user: User) -> str | None:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=text,
+            reply_markup=get_reply_markup(*args, **kwargs),
+        )
+
+    return func

@@ -1,5 +1,3 @@
-from telegram import ReplyKeyboardRemove
-
 from .utils import *
 
 edges = [
@@ -7,14 +5,9 @@ edges = [
 ]
 
 
-def prepare(update: Update, context: CallbackContext, user: User) -> None | str:
-    context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text="Хорошо, я тебя забыл :_(",
-        reply_markup=ReplyKeyboardRemove(),
-    )
+prepare = send_message_with_reply_keyboard('Хорошо, я тебя забыл :_(')
 
 
 @parse_commands(edges)
-def process(update: Update, context: CallbackContext, user: User) -> None | str:
+def process(update: Update, context: CallbackContext, user: User) -> str | None:
     pass

@@ -9,16 +9,11 @@ edges = [
 ]
 
 
-def prepare(update: Update, context: CallbackContext, user: User) -> None | str:
-    context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text="Напиши любое сообщение",
-        reply_markup=get_markup(edges),
-    )
+prepare = send_message_with_reply_keyboard('Напиши любое сообщение', edges)
 
 
 @parse_commands(edges)
-def process(update: Update, context: CallbackContext, user: User) -> None | str:
+def process(update: Update, context: CallbackContext, user: User) -> str | None:
     text = update.message.text
     text = re.sub('\.', '', text)
     text = re.sub(' ', 'ㅤ', text)

@@ -7,15 +7,15 @@ edges = [
 ]
 
 
-def prepare(update: Update, context: CallbackContext, user: User) -> None | str:
+def prepare(update: Update, context: CallbackContext, user: User) -> str | None:
     user.clear_properties()
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text="Что делаем?",
-        reply_markup=get_markup(edges),
+        text='Что делаем?',
+        reply_markup=get_reply_markup(edges),
     )
 
 
 @parse_commands(edges)
-def process(update: Update, context: CallbackContext, user: User) -> None | str:
+def process(update: Update, context: CallbackContext, user: User) -> str | None:
     pass
