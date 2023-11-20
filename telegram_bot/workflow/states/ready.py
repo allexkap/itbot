@@ -11,8 +11,8 @@ def prepare(update: Update, context: CallbackContext, user: User) -> str | None:
     user.clear_properties()
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text='Что делаем?',
-        reply_markup=get_reply_markup(edges),
+        text=get_text('state_ready:text', user),
+        reply_markup=get_reply_markup(edges, user),
     )
 
 

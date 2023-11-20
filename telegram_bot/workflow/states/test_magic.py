@@ -9,7 +9,7 @@ edges = [
 ]
 
 
-prepare = send_message_with_reply_keyboard('Напиши любое сообщение', edges)
+prepare = send_message_with_reply_keyboard('state_test_echo:text', edges)
 
 
 @parse_commands(edges)

@@ -1,6 +1,7 @@
 from telegram import Update
 from telegram.ext import CallbackContext
 
+from telegram_bot.locale import get_text
 from telegram_bot.models import User
 
 from . import states
@@ -22,7 +23,7 @@ def workflow_handler(update: Update, context: CallbackContext) -> None:
 
     except:
         context.bot.send_message(
-            chat_id=update.effective_chat.id, text='Sorry, error has occurred'
+            chat_id=update.effective_chat.id, text=get_text('global:error', user)
         )
         states[next_state:='ready'].prepare(update, context, user)
         raise

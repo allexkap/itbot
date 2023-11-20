@@ -5,7 +5,7 @@ edges = [
 ]
 
 
-prepare = send_message_with_reply_keyboard('Хорошо, я тебя забыл :_(')
+prepare = send_message_with_reply_keyboard('state_disabled:text')
 
 
 @parse_commands(edges)
