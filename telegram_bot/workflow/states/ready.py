@@ -1,9 +1,9 @@
 from .utils import *
 
 edges = [
-    Edge('test_echo', 'echo', 'Повторить сообщение'),
-    Edge('test_magic', 'magic', 'Сделать красиво'),
-    Edge('disabled', 'stop', 'Выйти из аккаунта'),
+    Edge('test_echo', 'echo', 'state_ready:edge_test_echo'),
+    Edge('test_magic', 'magic', 'state_ready:edge_test_magic'),
+    Edge('disabled', 'stop', 'state_ready:edge_disabled'),
 ]
 
 

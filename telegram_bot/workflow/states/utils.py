@@ -14,14 +14,15 @@ WorkflowFunction = Callable[[Update, CallbackContext, User], str | None]
 class Edge:
     next_state: str | WorkflowFunction
     cmd: str
-    text: str = ''
+    string_id: str | None = None
 
-    def __eq__(self, rhs: str) -> bool:
+    def __eq__(self, rhs: (str, str | User)) -> bool:
+        msg, lang = rhs
         return (
-            rhs[0] == '/'
-            and rhs[1:].partition(' ')[0] == self.cmd
-            or self.text
-            and rhs == self.text
+            msg[0] == '/'
+            and msg[1:].partition(' ')[0] == self.cmd
+            or self.string_id
+            and msg == get_text(self.string_id, lang)
         )
 
 
@@ -33,7 +34,7 @@ def parse_commands(edges: list[Edge]) -> Callable[[WorkflowFunction], WorkflowFu
     def decorator(fun: WorkflowFunction) -> WorkflowFunction:
         def func(update: Update, context: CallbackContext, user: User) -> str | None:
             try:
-                pos = edges.index((update.effective_message.text))
+                pos = edges.index((update.effective_message.text, user))
                 obj = edges[pos].next_state
                 return obj(update, context, user) if callable(obj) else obj
             except ValueError:
@@ -60,7 +61,10 @@ def get_reply_markup(
         'one_time_keyboard': False,
         'input_field_placeholder': get_text('global:placeholder', lang),
     }
-    keyboard = ((edge.text,) if edge.text else ('/' + edge.cmd,) for edge in edges)
+    keyboard = (
+        (get_text(edge.string_id, lang),) if edge.string_id else ('/' + edge.cmd,)
+        for edge in edges
+    )
     return ReplyKeyboardMarkup(keyboard, **kwargs)
 
 
