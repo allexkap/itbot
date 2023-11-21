@@ -1,0 +1,6 @@
+states:
+  - disabled
+  - ready
+  - test:
+    - echo
+    - magic

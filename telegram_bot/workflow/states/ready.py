@@ -1,8 +1,8 @@
-from .utils import *
+from telegram_bot.workflow.utils import *
 
 edges = [
-    Edge('test_echo', 'echo', 'state_ready:edge_test_echo'),
-    Edge('test_magic', 'magic', 'state_ready:edge_test_magic'),
+    Edge('test/echo', 'echo', 'state_ready:edge_test_echo'),
+    Edge('test/magic', 'magic', 'state_ready:edge_test_magic'),
     Edge('disabled', 'stop', 'state_ready:edge_disabled'),
 ]
 

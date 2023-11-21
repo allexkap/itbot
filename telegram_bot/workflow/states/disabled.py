@@ -1,4 +1,4 @@
-from .utils import *
+from telegram_bot.workflow.utils import *
 
 edges = [
     Edge('ready', 'start'),

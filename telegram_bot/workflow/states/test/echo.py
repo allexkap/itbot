@@ -1,6 +1,6 @@
 from telegram import ParseMode
 
-from .utils import *
+from telegram_bot.workflow.utils import *
 
 
 def _help(update: Update, context: CallbackContext, user: User) -> None:
