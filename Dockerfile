@@ -1,4 +1,8 @@
-FROM python:3.11-bookworm
+FROM python:3.11-slim
+
+RUN apt update && \
+    apt install -y libpq-dev && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
