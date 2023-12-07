@@ -1,0 +1,34 @@
+global:
+  placeholder:
+    lang_ru: Твой выбор?
+    lang_en: Твой выбор? (en)
+  error:
+    lang_ru: Произошла ошибка
+    lang_en: Произошла ошибка (en)
+
+state_ready:
+  text:
+    lang_ru: Что делаем?
+    lang_en: Что делаем? (en)
+  edge_test_echo:
+    lang_ru: Повторить сообщение
+    lang_en: Повторить сообщение (en)
+  edge_test_magic:
+    lang_ru: Сделать красиво
+    lang_en: Сделать красиво (en)
+  edge_disabled:
+    lang_ru: Выйти из аккаунта
+    lang_en: Выйти из аккаунта (en)
+
+state_test_echo:
+  text:
+    lang_ru: Напиши любое сообщение
+    lang_en: Напиши любое сообщение (en)
+  help:
+    lang_ru: \`//cancel\` to suppress command (ru)
+    lang_en: \`//cancel\` to suppress command
+
+state_disabled:
+  text:
+    lang_ru: Хорошо, я тебя забыл :_(
+    lang_en: Хорошо, я тебя забыл :_( (en)
