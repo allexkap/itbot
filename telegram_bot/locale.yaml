@@ -5,6 +5,9 @@ global:
   error:
     lang_ru: Произошла ошибка
     lang_en: Произошла ошибка (en)
+  cancel:
+    lang_ru: Отмена
+    lang_en: Отмена (en)
 
 state_ready:
   text:
@@ -25,10 +28,18 @@ state_test_echo:
     lang_ru: Напиши любое сообщение
     lang_en: Напиши любое сообщение (en)
   help:
-    lang_ru: \`//cancel\` to suppress command (ru)
-    lang_en: \`//cancel\` to suppress command
+    lang_ru: '`//cancel` to suppress command \(ru\)'
+    lang_en: '`//cancel` to suppress command'
 
 state_disabled:
   text:
     lang_ru: Хорошо, я тебя забыл :_(
     lang_en: Хорошо, я тебя забыл :_( (en)
+  
+state_language:
+  ru:
+    lang_ru: Я Русский
+    lang_en: Я Русский (en)
+  en:
+    lang_ru: Не Русский
+    lang_en: Не Русский (en)

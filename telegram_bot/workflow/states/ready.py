@@ -3,6 +3,7 @@ from telegram_bot.workflow.utils import *
 edges = [
     Edge('test/echo', 'echo', 'state_ready:edge_test_echo'),
     Edge('test/magic', 'magic', 'state_ready:edge_test_magic'),
+    Edge('language', 'setlang', 'state_ready:edge_language'),
     Edge('disabled', 'stop', 'state_ready:edge_disabled'),
 ]
 

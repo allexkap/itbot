@@ -4,3 +4,4 @@ states:
   - test:
     - echo
     - magic
+  - language

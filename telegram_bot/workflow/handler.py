@@ -13,7 +13,7 @@ def workflow_handler(update: Update, context: CallbackContext) -> None:
         user = User.objects.get(telegram_id=user_id)
     except User.DoesNotExist:
         user = User(telegram_id=user_id)
-        user.set_workflow_state('reset')
+        user.set_workflow_state('disabled')
 
     try:
         next_state = states[user.workflow_state].process(update, context, user)
