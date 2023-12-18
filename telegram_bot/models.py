@@ -3,9 +3,12 @@ from django.db import models
 
 class User(models.Model):
     telegram_id = models.IntegerField(primary_key=True, db_index=True)
-    isu_id = models.IntegerField(null=True)
-    workflow_state = models.CharField(max_length=32, null=True)
+    isu_id = models.IntegerField(null=True, blank=True)
+    workflow_state = models.CharField(max_length=32, null=True, blank=True)
     language = models.CharField(max_length=2, default='ru')
+    access_token = models.TextField(null=True, blank=True)
+    refresh_token = models.TextField(null=True, blank=True)
+    id_token = models.TextField(null=True, blank=True)
 
     def is_authenticated(self) -> bool:
         return self.isu_id is not None
