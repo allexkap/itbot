@@ -1,6 +1,7 @@
 states:
   - disabled
   - ready
+  - auth
   - test:
     - echo
     - magic

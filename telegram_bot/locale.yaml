@@ -43,3 +43,11 @@ state_language:
   en:
     lang_ru: Не Русский
     lang_en: Не Русский (en)
+
+state_auth:
+  link:
+    lang_ru: Перейти
+    lang_en: Перейти (en)
+  success:
+    lang_ru: Аккаунт подтвержден
+    lang_en: Аккаунт подтвержден (en)

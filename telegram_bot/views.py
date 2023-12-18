@@ -7,7 +7,9 @@ from django.views.decorators.csrf import csrf_exempt
 from telegram import Update
 from telegram.ext import MessageHandler, Updater
 
+from telegram_bot.locale import get_text
 from telegram_bot.models import User
+from telegram_bot.workflow import states
 from telegram_bot.workflow.handler import workflow_handler
 
 updater = Updater(token=settings.TELEGRAM_BOT_TOKEN, use_context=True)
@@ -48,7 +50,7 @@ def keycloak(request: HttpRequest) -> HttpResponse:
     else:
         try:
             user = User.objects.get(telegram_id=request.GET['state'])
-            assert user.id_token == 'waiting'
+            assert user.workflow_state == 'auth'
         except KeyError:
             error_description = 'Missing form parameter: state'
         except (User.DoesNotExist, AssertionError):
@@ -57,7 +59,14 @@ def keycloak(request: HttpRequest) -> HttpResponse:
             user.access_token = keycloak_response['access_token']
             user.refresh_token = keycloak_response['refresh_token']
             user.id_token = keycloak_response['id_token']
+            user.workflow_state = 'ready'
             user.save()
+
+            updater.bot.send_message(
+                user.telegram_id, get_text('state_auth:success', user)
+            )
+            states['ready'].reset(updater.bot, user.telegram_id, user)
+
             return JsonResponse({'request': request.GET, 'response': keycloak_response})
 
     return JsonResponse(
