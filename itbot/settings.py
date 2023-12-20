@@ -76,6 +76,45 @@ TEMPLATES = [
 WSGI_APPLICATION = 'itbot.wsgi.application'
 
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{asctime} {levelname} {filename} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'level': 'INFO',
+            'formatter': 'simple',
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'level': 'WARNING',
+            'filename': BASE_DIR / 'itbot.log',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'root': {
+            'handlers': ['console', 'file'],
+            'propagate': False,
+        },
+        'django': {
+            'handlers': ['console', 'file'],
+            'propagate': False,
+        },
+    },
+}
+
+
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 

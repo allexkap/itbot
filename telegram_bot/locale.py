@@ -1,3 +1,5 @@
+import logging
+
 from django.db import models
 
 from telegram_bot.models import User
@@ -15,7 +17,7 @@ def get_text(string_id: str, lang: str | User) -> str | None:
     try:
         return getattr(String.objects.get(string_id=string_id), f'lang_{lang}')
     except String.DoesNotExist:
-        print(f'Unknown string id = "{string_id}"')  # todo
+        logging.error(f'Unknown string id = "{string_id}"')
     except AttributeError:
-        print(f'Unknown locale = "{lang}"')  # todo
+        logging.error(f'Unknown locale = "{lang}"')
     return None
