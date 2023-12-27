@@ -66,3 +66,35 @@
 1. Для хранения данных необходимо использовать базу данных PostgreSQL.
 1. В случае необходимости обеспечения асинхронной обработки задач необходимо использовать Celery + Redis.
 1. Приложение должно запускаться внутри Docker контейнеров с помощью docker-compose.
+
+
+## TL;DR
+### Структура
+- [Файл](telegram_bot/locale.yaml) с локализацией сообщений
+- [Документация](telegram_bot/workflow/README.md) на добавления новых команд и workflow
+
+### Переменные окружения
+Должны быть заданы следующие переменные для docker compose
+
+Общие:
+- TELEGRAM_BOT_TOKEN
+
+База данных:
+- POSTGRES_USER
+- POSTGRES_PASSWORD
+- POSTGRES_NAME
+
+Сервер аутентификации:
+- KEYCLOAK_REALM_URL
+- KEYCLOAK_CLIENT_ID
+- KEYCLOAK_CLIENT_SECRET
+- KEYCLOAK_REDIRECT_URL
+
+### Запуск
+```sh
+docker-compose build
+docker-compose run django migrate
+docker-compose run django genlocale
+docker-compose run django createsuperuser
+docker-compose up
+```
