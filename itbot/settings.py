@@ -85,7 +85,8 @@ LOGGING = {
             'style': '{',
         },
         'simple': {
-            'format': '{levelname} {message}',
+            'format': '[{asctime}] {levelname} {message}',
+            'datefmt': '%d/%b/%Y %H:%M:%S',
             'style': '{',
         },
     },
@@ -103,12 +104,14 @@ LOGGING = {
         },
     },
     'loggers': {
-        'root': {
+        'workflow': {
             'handlers': ['console', 'file'],
+            'level': 'INFO',
             'propagate': False,
         },
         'django': {
             'handlers': ['console', 'file'],
+            'level': 'WARNING',
             'propagate': False,
         },
     },

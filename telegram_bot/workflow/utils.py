@@ -1,3 +1,4 @@
+import logging
 from collections.abc import Callable
 from dataclasses import dataclass
 
@@ -9,6 +10,8 @@ from telegram_bot.models import User
 
 WorkflowFunction = Callable[[Update, CallbackContext, User], str | None]
 
+logger = logging.getLogger('workflow')
+
 
 @dataclass
 class Edge:
@@ -16,9 +19,9 @@ class Edge:
     cmd: str
     string_id: str | None = None
 
-    def __eq__(self, rhs: (str, str | User)) -> bool:
+    def __eq__(self, rhs: tuple[str, str | User]) -> bool:
         msg, lang = rhs
-        return (
+        return bool(
             msg[0] == '/'
             and msg[1:].partition(' ')[0] == self.cmd
             or self.string_id
@@ -26,24 +29,21 @@ class Edge:
         )
 
 
-def parse_cmd(msg: str) -> tuple[str]:
-    return msg[1:].partition(' ')[::2] if msg.startswith('/') else ('', msg)
-
-
 def parse_commands(edges: list[Edge]) -> Callable[[WorkflowFunction], WorkflowFunction]:
     def decorator(fun: WorkflowFunction) -> WorkflowFunction:
         def func(update: Update, context: CallbackContext, user: User) -> str | None:
+            user_id = update.effective_user.id
+            msg = update.effective_message.text
             try:
-                pos = edges.index((update.effective_message.text, user))
+                pos = edges.index((msg, user))
                 obj = edges[pos].next_state
                 return obj(update, context, user) if callable(obj) else obj
             except ValueError:
-                pass
-            try:
-                return fun(update, context, user)
-            except Exception as ex:
-                print(ex)  # todo logging
-                return None
+                logger.info(
+                    f'{user_id=}; command "{msg}" not found, run default handler'
+                )
+
+            return fun(update, context, user)
 
         return func
 
@@ -55,13 +55,13 @@ def get_reply_markup(
 ) -> ReplyKeyboardMarkup | ReplyKeyboardRemove:
     if edges is None:
         return ReplyKeyboardRemove()
-    assert lang  # None lang available only for None edges
+    assert lang, 'None lang available only for None edges'
     kwargs = {
         'resize_keyboard': True,
         'one_time_keyboard': False,
         'input_field_placeholder': get_text('global:placeholder', lang),
     }
-    keyboard = (
+    keyboard = tuple(
         (get_text(edge.string_id, lang),) if edge.string_id else ('/' + edge.cmd,)
         for edge in edges
     )
@@ -69,7 +69,7 @@ def get_reply_markup(
 
 
 def send_message_with_reply_keyboard(string_id: str, *args, **kwargs):
-    assert len(args) <= 1 and 'lang' not in kwargs  # check lang not in params
+    assert len(args) <= 1 and 'lang' not in kwargs, 'check lang not in params'
 
     def func(update: Update, context: CallbackContext, user: User) -> str | None:
         context.bot.send_message(
