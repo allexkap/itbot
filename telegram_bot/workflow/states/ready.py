@@ -1,11 +1,23 @@
 from telegram_bot.workflow.utils import *
+import requests
+
+
+def qrcode(update: Update, context: CallbackContext, user: User) -> str | None:
+    r = requests.get(
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/'
+        '8/8d/QR_Code_Damaged.jpg/220px-QR_Code_Damaged.jpg'
+    )
+    assert r.status_code == 200
+    context.bot.send_photo(chat_id=update.effective_chat.id, photo=r.content)
+
 
 edges = [
-    Edge('test/echo', 'echo', 'state_ready:edge_test_echo'),
-    Edge('test/magic', 'magic', 'state_ready:edge_test_magic'),
     Edge('auth', 'auth', 'state_ready:edge_auth'),
+    Edge(qrcode, 'qr', 'state_ready:qrcode'),
     Edge('language', 'setlang', 'state_ready:edge_language'),
     Edge('disabled', 'stop', 'state_ready:edge_disabled'),
+    Edge('test/echo', 'echo', 'state_ready:edge_test_echo'),
+    Edge('test/magic', 'magic', 'state_ready:edge_test_magic'),
 ]
 
 

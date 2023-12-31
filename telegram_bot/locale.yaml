@@ -13,6 +13,9 @@ state_ready:
   text:
     lang_ru: Что делаем?
     lang_en: Что делаем? (en)
+  qrcode:
+    lang_ru: Получить qr code
+    lang_en: Получить qr code (en)
   edge_test_echo:
     lang_ru: Повторить сообщение
     lang_en: Повторить сообщение (en)
