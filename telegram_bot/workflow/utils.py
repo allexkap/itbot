@@ -15,7 +15,7 @@ logger = logging.getLogger('telegram')
 
 @dataclass
 class Edge:
-    next_state: str | WorkflowFunction
+    next_state: str | None | WorkflowFunction
     cmd: str
     string_id: str | None = None
     is_active: Callable[[User], bool] = lambda x: True
@@ -38,7 +38,8 @@ def parse_commands(edges: list[Edge]) -> Callable[[WorkflowFunction], WorkflowFu
             try:
                 pos = edges.index((msg, user))
                 obj = edges[pos].next_state
-                return obj(update, context, user) if callable(obj) else obj
+                if obj is not None:
+                    return obj(update, context, user) if callable(obj) else obj
             except ValueError:
                 logger.info(
                     f'{user_id=}; command "{msg}" not found, run default handler'

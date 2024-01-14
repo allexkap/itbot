@@ -1,15 +1,9 @@
 from telegram_bot.workflow.utils import *
 
 
-def handler(update: Update, context: CallbackContext, user: User) -> str | None:
-    user.language = edges[edges.index((update.effective_message.text, user))].cmd
-    user.save()
-    return 'ready'
-
-
 edges = [
-    Edge(handler, 'ru', 'state_language:ru'),
-    Edge(handler, 'en', 'state_language:en'),
+    Edge(None, 'ru', 'state_language:ru'),
+    Edge(None, 'en', 'state_language:en'),
     Edge('ready', 'cancel', 'global:cancel'),
 ]
 
@@ -19,4 +13,12 @@ prepare = send_message_with_reply_keyboard('global:placeholder', edges)
 
 @parse_commands(edges)
 def process(update: Update, context: CallbackContext, user: User) -> str | None:
-    pass
+    try:
+        user.language = edges[edges.index((update.effective_message.text, user))].cmd
+        user.save()
+    except ValueError:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=get_text('state_language:unknown_language', user),
+        )
+    return 'ready'

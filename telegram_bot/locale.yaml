@@ -51,3 +51,8 @@ state_auth:
   success:
     lang_ru: Аккаунт подтвержден
     lang_en: Аккаунт подтвержден (en)
+
+state_language:
+  unknown_language:
+    lang_ru: Неизвестный язык
+    lang_en: Неизвестный язык (en)

@@ -27,7 +27,7 @@ def workflow_handler(update: Update, context: CallbackContext) -> None:
         logger.error(
             f'{user_id=}; '
             f'message="{update.effective_message.text}"; '
-            f'state={user.workflow_state}: {ex}'
+            f'state={user.workflow_state}; {ex}'
         )
         context.bot.send_message(
             chat_id=update.effective_chat.id, text=get_text('global:error', user)
