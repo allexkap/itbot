@@ -104,7 +104,7 @@ LOGGING = {
         },
     },
     'loggers': {
-        'workflow': {
+        'telegram': {
             'handlers': ['console', 'file'],
             'level': 'INFO',
             'propagate': False,

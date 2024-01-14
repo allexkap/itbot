@@ -4,5 +4,4 @@ states:
   - auth
   - test:
     - echo
-    - magic
   - language

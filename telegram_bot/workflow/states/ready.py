@@ -12,12 +12,11 @@ def qrcode(update: Update, context: CallbackContext, user: User) -> str | None:
 
 
 edges = [
-    Edge('auth', 'auth', 'state_ready:edge_auth'),
-    Edge(qrcode, 'qr', 'state_ready:qrcode'),
+    Edge('auth', 'auth', 'state_ready:edge_auth', lambda u: not u.is_authenticated()),
+    Edge(qrcode, 'qr', 'state_ready:qrcode', lambda u: u.is_authenticated()),
     Edge('language', 'setlang', 'state_ready:edge_language'),
     Edge('disabled', 'stop', 'state_ready:edge_disabled'),
     Edge('test/echo', 'echo', 'state_ready:edge_test_echo'),
-    Edge('test/magic', 'magic', 'state_ready:edge_test_magic'),
 ]
 
 

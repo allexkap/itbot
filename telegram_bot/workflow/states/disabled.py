@@ -5,7 +5,14 @@ edges = [
 ]
 
 
-prepare = send_message_with_reply_keyboard('state_disabled:text')
+def prepare(update: Update, context: CallbackContext, user: User) -> str | None:
+    user.isu_id = None
+    user.save()
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=get_text('state_disabled:text', user),
+        reply_markup=get_reply_markup(edges, user),
+    )
 
 
 @parse_commands(edges)

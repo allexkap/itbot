@@ -10,7 +10,7 @@ from telegram_bot.models import User
 
 WorkflowFunction = Callable[[Update, CallbackContext, User], str | None]
 
-logger = logging.getLogger('workflow')
+logger = logging.getLogger('telegram')
 
 
 @dataclass
@@ -18,15 +18,16 @@ class Edge:
     next_state: str | WorkflowFunction
     cmd: str
     string_id: str | None = None
+    is_active: Callable[[User], bool] = lambda x: True
 
-    def __eq__(self, rhs: tuple[str, str | User]) -> bool:
-        msg, lang = rhs
-        return bool(
+    def __eq__(self, rhs: tuple[str, User]) -> bool:
+        msg, user = rhs
+        return (
             msg[0] == '/'
             and msg[1:].partition(' ')[0] == self.cmd
-            or self.string_id
-            and msg == get_text(self.string_id, lang)
-        )
+            or self.string_id is not None
+            and msg == get_text(self.string_id, user)
+        ) and self.is_active(user)
 
 
 def parse_commands(edges: list[Edge]) -> Callable[[WorkflowFunction], WorkflowFunction]:
@@ -51,31 +52,32 @@ def parse_commands(edges: list[Edge]) -> Callable[[WorkflowFunction], WorkflowFu
 
 
 def get_reply_markup(
-    edges: list[Edge] | None = None, lang: str | User | None = None
+    edges: list[Edge], user: User
 ) -> ReplyKeyboardMarkup | ReplyKeyboardRemove:
-    if edges is None:
-        return ReplyKeyboardRemove()
-    assert lang, 'None lang available only for None edges'
     kwargs = {
         'resize_keyboard': True,
         'one_time_keyboard': False,
-        'input_field_placeholder': get_text('global:placeholder', lang),
+        'input_field_placeholder': get_text('global:placeholder', user),
     }
     keyboard = tuple(
-        (get_text(edge.string_id, lang),) if edge.string_id else ('/' + edge.cmd,)
+        (get_text(edge.string_id, user),) if edge.string_id else ('/' + edge.cmd,)
         for edge in edges
+        if edge.is_active(user)
     )
     return ReplyKeyboardMarkup(keyboard, **kwargs)
 
 
 def send_message_with_reply_keyboard(string_id: str, *args, **kwargs):
-    assert len(args) <= 1 and 'lang' not in kwargs, 'check lang not in params'
-
     def func(update: Update, context: CallbackContext, user: User) -> str | None:
+        if len(args) or len(kwargs):
+            markup = get_reply_markup(*args, user=user, **kwargs)
+        else:
+            markup = ReplyKeyboardRemove()
+
         context.bot.send_message(
             chat_id=update.effective_chat.id,
             text=get_text(string_id, user),
-            reply_markup=get_reply_markup(*args, lang=user, **kwargs),
+            reply_markup=markup,
         )
 
     return func

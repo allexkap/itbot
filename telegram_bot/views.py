@@ -60,6 +60,7 @@ def keycloak(request: HttpRequest) -> HttpResponse:
             user.refresh_token = keycloak_response['refresh_token']
             user.id_token = keycloak_response['id_token']
             user.workflow_state = 'ready'
+            user.isu_id = 0  # make request here
             user.save()
 
             updater.bot.send_message(

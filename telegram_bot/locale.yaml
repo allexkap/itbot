@@ -19,9 +19,6 @@ state_ready:
   edge_test_echo:
     lang_ru: Повторить сообщение
     lang_en: Повторить сообщение (en)
-  edge_test_magic:
-    lang_ru: Сделать красиво
-    lang_en: Сделать красиво (en)
   edge_disabled:
     lang_ru: Выйти из аккаунта
     lang_en: Выйти из аккаунта (en)
